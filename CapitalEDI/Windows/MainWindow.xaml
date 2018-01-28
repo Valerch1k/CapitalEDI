@@ -1,0 +1,309 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CapitalEDI"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="CapitalEDI.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="CapitalEDI" Height="800" Width="1280" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" >
+
+    <Grid>
+
+        <Menu x:Name="menu" Height="35" VerticalAlignment="Top"   Background="#FF5DD1BC" >
+            <MenuItem Foreground="#DDFFFFFF" Header="Меню" Height="35" Width="127">
+                <MenuItem x:Name="menuSettings" Header="Подключение WebSerice" Click="menuSettings_Click"/>
+                <MenuItem x:Name="menuChangeConnection" Header=" Изменить подкл. БД" Click="menuChangeConnection_Click"  />
+            </MenuItem>
+        </Menu>
+        <StatusBar Height="30" VerticalAlignment="Bottom" Background="#FF5DD1BC">
+            <Label x:Name="lblConnectionString" 
+                   Content="" 
+                   Foreground="#DDFFFFFF"
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Left" Width="422" />
+            <StatusBarItem 
+                Height="30" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Left" 
+                Width="29" >
+                <Ellipse 
+                    x:Name="EllipseStatus" 
+                    Height="20" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="23"/>
+            </StatusBarItem>
+            <Label x:Name="lblStatus" 
+                   Content="" 
+                   Foreground="#DDFFFFFF"
+                   FontWeight="Bold" 
+                   HorizontalAlignment="Left" Width="474" />
+
+
+        </StatusBar>
+        <TabControl x:Name="tabControl" Margin="8,51,10,65" BorderBrush="#FF5DD1BC">
+            <TabItem Header="Заказы">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="dataGridRelationships" 
+                              AutoGenerateColumns="False" 
+                              CanUserAddRows="False" 
+                              SelectionMode="Extended" 
+                              SelectionUnit="FullRow"
+                              Background="White"
+                              IsReadOnly="True" 
+                              ToolTip="Нажмите два раза, чтобы открыть список заказов"
+                              MouseDoubleClick="dataGridRelationships_MouseDoubleClick" Margin="0,0,0,32">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                Header="Направление" 
+                                Binding="{Binding direction}" 
+                                Width="100"  />
+                            <DataGridTextColumn 
+                                Header="Отправитель" 
+                                Binding="{Binding partner_name}" 
+                                Width="190"  />
+                            <DataGridTextColumn 
+                                Header="ТипДокумента" 
+                                Binding="{Binding document_type}" 
+                                Width="190"  />
+                            <DataGridTextColumn 
+                                Header="Описание" 
+                                Binding="{Binding description}" 
+                                Width="460"  />
+                            <DataGridTextColumn 
+                                Header="Версия " 
+                                Binding="{Binding document_version}" 
+                                Width="110"  />
+                            <DataGridTextColumn 
+                                Header="Стандарт" 
+                                Binding="{Binding document_standard}" 
+                                Width="80"  />
+                            <DataGridTextColumn 
+                                Header="Тест" 
+                                Binding="{Binding document_test}" 
+                                Width="46"  />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label  Content="Всего строк :" 
+                            HorizontalAlignment="Left" 
+                            Margin="4,0,0,4" 
+                            Width="81" 
+                            Height="26" 
+                            VerticalAlignment="Bottom"/>
+                    <Label   Content="{Binding Items.Count, ElementName=dataGridRelationships, UpdateSourceTrigger=PropertyChanged}" 
+                            HorizontalAlignment="Left" 
+                            Margin="90,0,0,4" 
+                            Width="28" 
+                            Height="25" 
+                            VerticalAlignment="Bottom"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Журнал Расхода" IsSelected="True">
+                <Grid Background="#FFF4FFFF">
+                    <Border BorderBrush="#FF6ED7E2" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="680,0,0,5" VerticalAlignment="Bottom" Width="380">
+                        <Button x:Name="btnExportOrderSP" 
+                                Background="#FF5D5DD1" 
+                                BorderBrush="#FF5DD1BC"
+                                ToolTip="Експорт в систему EDI подтверждение заказа"
+                                Margin="165,0,0,4" Height="32" VerticalAlignment="Bottom" Click="BtnExportOrderSP_Click" HorizontalAlignment="Left" Width="103" >
+                            <TextBlock Text="Подтверждение заказа" TextWrapping="Wrap" TextAlignment="Center"  Height="26" FontSize="9" Width="69" />
+                        </Button>
+                    </Border>
+                    <Border BorderBrush="#FF6ED7E2" BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="4,0,0,5" VerticalAlignment="Bottom" Width="111"/>
+                    <Border BorderBrush="#FF6ED7E2" BorderThickness="1" HorizontalAlignment="Left" Margin="126,0,0,5" Width="542" Height="43" VerticalAlignment="Bottom"/>
+                    <DataGrid x:Name="dataGridЖурналРасхода" 
+                              AutoGenerateColumns="False" 
+                              CanUserAddRows="False" 
+                              Background="White"
+                              materialDesign:DataGridAssist.CellPadding="4 2 2 2" 
+                              materialDesign:DataGridAssist.ColumnHeaderPadding="4 2 2 2"
+                              Margin="0,29,0,53" >
+                        <DataGrid.Columns>
+                            <!--<DataGridCheckBoxColumn Header="Експорт" Binding="{Binding isExport,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"/>-->
+                            <DataGridTemplateColumn Header="Експорт" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox ToolTip="Выбирете для експорта"  IsChecked="{Binding isExport,Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn 
+                                Header="Номер" 
+                                Binding="{Binding НомерОперации}" 
+                                IsReadOnly="True"
+                                Width="80"  />
+                            <DataGridTextColumn 
+                                Header="Дата" 
+                                Binding="{Binding ДатаТекст}" 
+                                IsReadOnly="True"
+                                MinWidth="60"/>
+                            <DataGridTemplateColumn Header="З" Width="26"  IsReadOnly="True" >
+                                <DataGridTemplateColumn.CellTemplate >
+                                    <DataTemplate >
+                                        <CheckBox ToolTip="Подтвеждение заказа"  IsChecked="{Binding IsORDRSP, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}"   Background="#FF5D5DD1" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="О" Width="26"  IsReadOnly="True" >
+                                <DataGridTemplateColumn.CellTemplate >
+                                    <DataTemplate>
+                                        <CheckBox ToolTip="Уведомление об отгрузке"  IsChecked="{Binding IsDESADV, Mode=TwoWay ,UpdateSourceTrigger=PropertyChanged}" Background="#FF5D9CD1"  />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn 
+                                Header="Наименовании" 
+                                Binding="{Binding Наименование}" 
+                                IsReadOnly="True"
+                                MinWidth="220"/>
+                            <DataGridTextColumn 
+                                Header="Примечание" 
+                                Binding="{Binding Содержание}" 
+                                IsReadOnly="True"
+                                MinWidth="200"/>
+                            <DataGridTextColumn 
+                                Header="ТА" 
+                                Binding="{Binding p30}" 
+                                IsReadOnly="True"
+                                Width="100"/>
+                            <DataGridTextColumn
+                                Header="Товар"
+                                Binding="{Binding СуммаТовара1}"
+                                IsReadOnly="True"
+                                MinWidth="60" />
+                            <DataGridTextColumn
+                                Header="Тара"
+                                Binding="{Binding СуммаТары1}"
+                                IsReadOnly="True"
+                                MinWidth="60" />
+                            <DataGridTextColumn
+                                Header="НДСТары"
+                                Binding="{Binding СуммаНДСтары}"
+                                IsReadOnly="True"
+                                MinWidth="60" />
+                            <DataGridTextColumn
+                                Header="НДСТовара"
+                                Binding="{Binding СуммаНДСтовара}"
+                                IsReadOnly="True"
+                                MinWidth="60" />
+                            <DataGridTextColumn
+                                Header="Всего"
+                                Binding="{Binding СуммаВсего1}"
+                                IsReadOnly="True"
+                                MinWidth="60" />
+                            <DataGridTextColumn 
+                                Header="Напр." 
+                                IsReadOnly="True"
+                                Binding="{Binding Direction}" 
+                                Width="44"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label  Content="Всего строк :" 
+                HorizontalAlignment="Left" 
+                Margin="4,0,0,11"  
+                Width="81" 
+                Height="26" 
+                VerticalAlignment="Bottom"/>
+                    <Label   Content="{Binding Items.Count, ElementName=dataGridЖурналРасхода, UpdateSourceTrigger=PropertyChanged}" 
+                HorizontalAlignment="Left" 
+                Margin="86,0,0,12" 
+                Width="28" 
+                Height="25" 
+                VerticalAlignment="Bottom"/>
+                    <ComboBox x:Name="cbxDirection" 
+                        Margin="138,0,0,9" 
+                        VerticalAlignment="Bottom" 
+                        SelectedValuePath="Direction"
+                        SelectedValue="{Binding Direction,Mode=TwoWay}"
+                        SelectedItem="{Binding Direction}"
+                        IsSynchronizedWithCurrentItem="True"
+                        DisplayMemberPath="Кратко"
+                        ToolTip="Направление" 
+                        Height="33" 
+                        HorizontalAlignment="Left" 
+                        Width="122" 
+                        />
+                    <DatePicker 
+                    x:Name="datePickerFirst" 
+                    HorizontalAlignment="Left"  
+                    Margin="277,0,0,9" 
+                    ToolTip="Дата от которой должны отображаться документы"
+                    SelectedDate="{x:Static System:DateTime.Now}" 
+                    Width="113" 
+                    xml:lang="ru-RU" 
+                    Height="25" 
+                    VerticalAlignment="Bottom"  />
+                    <DatePicker 
+                        x:Name="datePickerLast"
+                        xml:lang="ru-RU" 
+                        HorizontalAlignment="Left" 
+                        Margin="407,0,0,9"
+                        ToolTip="Дата до которой должны отображаться документы"
+                        SelectedDate="{x:Static System:DateTime.Now}" 
+                        Width="122" Height="25" VerticalAlignment="Bottom"/>
+                    <Button x:Name="btnExportDESADV" 
+                            HorizontalAlignment="Left" 
+                            Margin="960,0,0,10" 
+                            Background="#FF5D9CD1" 
+                            BorderBrush="#FF5DD1BC" 
+                            VerticalAlignment="Bottom" 
+                            ToolTip="Експорт в систему EDI уведомлений об отгрузке"
+                            Width="91" Click="btnExportDESADV_Click" FontSize="10">
+                        <TextBlock Text="Уведомление об отгрузке" TextWrapping="Wrap" TextAlignment="Center"  Height="26" FontSize="9" Width="60" />
+                    </Button>
+                    <ComboBox x:Name="cbxPartnerILN" 
+                        Margin="691,0,0,9" 
+                        VerticalAlignment="Bottom" 
+                        SelectedValuePath="partner_iln"
+                        SelectedValue="{Binding partner_iln}"
+                        DisplayMemberPath="partner_name"
+                        ToolTip="Партнер в системе EDI" Height="33" HorizontalAlignment="Left" Width="138" SelectionChanged="cbxPartnerILN_SelectionChanged" />
+                    <Button x:Name="btnЗаполнитьЖурналРасхода" 
+                            Content="Заполнить" 
+                            ToolTip="Заполнить журнал расхода накладными"
+                            HorizontalAlignment="Left" 
+                            Margin="548,0,0,11" 
+                            Background="#FF5DD1BC" 
+                            BorderBrush="#FF5DD1BC" 
+                            VerticalAlignment="Bottom" 
+                            Width="104" Click="btnЗаполнитьЖурналРасхода_Click"/>
+                    <Label Margin="0,0,0,0" Height="29" VerticalAlignment="Top"  Background="#FFF4FFFF" >
+                        <TextBlock Name="txtblockPartnerName" Text="" TextWrapping="Wrap"  TextAlignment="Center"  Height="22" FontSize="14" Width="1238" FontWeight="Bold" Foreground="#DD2A2A2B" />
+                    </Label>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+        <Button x:Name="btnUpdate" 
+                Style="{StaticResource FontAwesome}" 
+                Click="btnUpdate_Click"  
+                Foreground="Teal" 
+                BorderThickness="0" 
+                Background="Transparent" 
+                FontSize="26" 
+                Content="&#xF021;" 
+                Margin="156,0,0,33" 
+                HorizontalAlignment="Left" 
+                Width="32" 
+                Height="27" 
+                ToolTip="Обновить данные"
+                VerticalAlignment="Bottom"/>
+        <Label  Content="New Font Size:" 
+                HorizontalAlignment="Left" 
+                Margin="11,0,0,33" 
+                Height="26" 
+                VerticalAlignment="Bottom"/>
+        <TextBox x:Name="txtFontSize" 
+                 HorizontalAlignment="Left" 
+                 Margin="104,0,0,34" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding FontSize, Mode=OneTime, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"  
+                 Width="32" 
+                 Height="23" 
+                 VerticalAlignment="Bottom" LostFocus="txtFontSize_LostFocus" />
+
+    </Grid>
+</Window>

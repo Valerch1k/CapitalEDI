@@ -1,0 +1,19 @@
+﻿<Window x:Class="CapitalEDI.Windows.SettingWebSerice"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CapitalEDI.Windows"
+        mc:Ignorable="d"
+        Title="Подключение к Web Service Comarch EDI" Height="300" Width="491" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Loaded="Window_Loaded" KeyUp="Window_KeyUp" >
+    <Grid>
+        <Label x:Name="lblLogin" Content="Логин :" HorizontalAlignment="Left" Margin="88,34,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <TextBox x:Name="txtLogin" HorizontalAlignment="Left" Height="26" Margin="177,34,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="196" FontSize="14"/>
+        <Label x:Name="lblPassword" Content="Пароль :" HorizontalAlignment="Left" Margin="88,109,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <Button x:Name="btnSave" Content="Сохранить" Margin="183,0,192,31" Background="#FF5DD1BC" BorderBrush="#FF5DD1BC" Height="36" VerticalAlignment="Bottom" Click="btnSave_Click"/>
+        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="177,102,0,0" VerticalAlignment="Top" Width="196" FontSize="14"/>
+        <CheckBox x:Name="checkActiveTextBox" Content="Изменить данные для входа" HorizontalAlignment="Left" Margin="127,157,0,0" VerticalAlignment="Top" Background="#FF5DD1BC" FontSize="14" Checked="checkActiveTextBox_Checked" Unchecked="checkActiveTextBox_Unchecked"/>
+        <Label Content="Esc - закрыть окно и сохранить настройки" HorizontalAlignment="Left" Margin="1,0,0,2" VerticalAlignment="Bottom" RenderTransformOrigin="-0.079,-1.15" Height="27"/>
+
+    </Grid>
+</Window>
